@@ -18,6 +18,7 @@ cat >/etc/ssh/sshd_config.d/custom.conf <<EOF
 Port ${ssh_port}
 AuthorizedKeysFile .ssh/authorized_keys
 PasswordAuthentication no
+PermitRootLogin no
 X11Forwarding no
 EOF
 
