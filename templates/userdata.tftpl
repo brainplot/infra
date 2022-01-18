@@ -17,6 +17,11 @@ EOF
 chmod 600 ~${admin_user}/.ssh/authorized_keys
 chown -R ${admin_user}: ~${admin_user}/.ssh
 
+# Allow password-less sudo for admin user
+cat >/etc/sudoers.d/10-${admin_user} <<EOF
+${admin_user} ALL=(ALL) NOPASSWD:ALL
+EOF
+
 # Custom settings for the sshd service
 cat >/etc/ssh/sshd_config.d/custom.conf <<EOF
 Port ${ssh_port}
