@@ -18,6 +18,10 @@ override.tfvars
 *_override.tf.json
 *_override.tfvars
 
+# Sensitive variable values
+sensitive.tfvars
+sensitive.auto.tfvars
+
 # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
 *.tfplan
 
