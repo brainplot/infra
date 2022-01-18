@@ -12,6 +12,9 @@ resource "digitalocean_project" "main" {
   description = var.project_description
   purpose     = var.project_purpose
   environment = var.project_environment
+  resources = [
+    digitalocean_droplet.main.urn,
+  ]
 }
 
 resource "digitalocean_vpc" "main" {
