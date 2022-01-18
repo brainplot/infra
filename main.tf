@@ -35,7 +35,7 @@ resource "digitalocean_droplet" "main" {
   size              = var.droplet_size
   ipv6              = true
   graceful_shutdown = true
-  droplet_agent     = true
+  droplet_agent     = false
   user_data = templatefile("templates/userdata.tftpl", {
     admin_user = var.admin_user
     ssh_port   = var.ssh_port
