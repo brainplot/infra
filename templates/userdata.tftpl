@@ -1,11 +1,11 @@
 #!/bin/sh
 
-apt-get update && apt-get upgrade -y
+apt-get -y update && apt-get -y upgrade
 
 # Make sure sudo is installed
 if ! dpkg-query -l sudo
 then
-	apt-get install -y sudo
+	apt-get -y install sudo
 fi
 
 adduser -q --gecos Administrator --disabled-password ${admin_user} && adduser ${admin_user} sudo
