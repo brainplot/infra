@@ -9,6 +9,14 @@ apt-get -y clean
 
 adduser -q --gecos Administrator --disabled-password ${admin_user} && adduser ${admin_user} sudo
 
+# Authorize key for the admin user
+mkdir -p -m0700 ~${admin_user}/.ssh
+cat >~${admin_user}/.ssh/authorized_keys <<EOF
+${ssh_public_key}
+EOF
+chmod 600 ~${admin_user}/.ssh/authorized_keys
+chown -R ${admin_user}: ~${admin_user}/.ssh
+
 # Custom settings for the sshd service
 cat >/etc/ssh/sshd_config.d/custom.conf <<EOF
 Port ${ssh_port}

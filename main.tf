@@ -37,8 +37,9 @@ resource "digitalocean_droplet" "web" {
   graceful_shutdown = true
   droplet_agent     = false
   user_data = templatefile("templates/userdata.tftpl", {
-    admin_user = var.admin_user
-    ssh_port   = var.ssh_port
+    admin_user     = var.admin_user
+    ssh_port       = var.ssh_port
+    ssh_public_key = digitalocean_ssh_key.web.public_key
   })
 
   vpc_uuid = digitalocean_vpc.website.id
