@@ -7,28 +7,28 @@ terraform {
   }
 }
 
-resource "digitalocean_project" "main" {
+resource "digitalocean_project" "website" {
   name        = var.domain_name
   description = var.project_description
   purpose     = var.project_purpose
   environment = var.project_environment
   resources = [
-    digitalocean_droplet.main.urn,
+    digitalocean_droplet.web.urn,
   ]
 }
 
-resource "digitalocean_vpc" "main" {
+resource "digitalocean_vpc" "website" {
   name     = var.domain_name
   region   = var.region
   ip_range = var.vpc_ip_range
 }
 
-resource "digitalocean_ssh_key" "main" {
+resource "digitalocean_ssh_key" "web" {
   name       = var.domain_name
   public_key = file("~/.ssh/${var.domain_name}.pub")
 }
 
-resource "digitalocean_droplet" "main" {
+resource "digitalocean_droplet" "web" {
   image             = var.droplet_image
   name              = var.droplet_name != null ? var.droplet_name : var.domain_name
   region            = var.region
@@ -41,8 +41,8 @@ resource "digitalocean_droplet" "main" {
     ssh_port   = var.ssh_port
   })
 
-  vpc_uuid = digitalocean_vpc.main.id
-  ssh_keys = [digitalocean_ssh_key.main.fingerprint]
+  vpc_uuid = digitalocean_vpc.website.id
+  ssh_keys = [digitalocean_ssh_key.web.fingerprint]
 }
 
 locals {
@@ -50,9 +50,9 @@ locals {
   all_addresses = ["0.0.0.0/0", "::/0"]
 }
 
-resource "digitalocean_firewall" "main" {
+resource "digitalocean_firewall" "web" {
   name        = var.domain_name
-  droplet_ids = [digitalocean_droplet.main.id]
+  droplet_ids = [digitalocean_droplet.web.id]
 
   inbound_rule {
     protocol         = "tcp"
