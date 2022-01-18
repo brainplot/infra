@@ -50,3 +50,13 @@ variable "https_port" {
   type    = number
   default = 443
 }
+
+variable "admin_user" {
+  type        = string
+  description = "First unprivileged user to create on the newly-deployed machine."
+  default     = "admin"
+  validation {
+    condition     = can(regex("^[a-z][-a-z0-9]*$", var.admin_user))
+    error_message = "UNIX users must match the ^[a-z][-a-z0-9]*$ pattern."
+  }
+}

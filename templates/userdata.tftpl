@@ -1,5 +1,15 @@
 #!/bin/sh
 
+apt-get update && apt-get upgrade -y
+
+# Make sure sudo is installed
+if ! dpkg-query -l sudo
+then
+	apt-get install -y sudo
+fi
+
+adduser -q --gecos Administrator --disabled-password ${admin_user} && adduser ${admin_user} sudo
+
 # Custom settings for the sshd service
 cat >/etc/ssh/sshd_config.d/custom.conf <<EOF
 Port ${ssh_port}
