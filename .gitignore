@@ -14,9 +14,11 @@ crash.*.log
 override.tf
 override.tf.json
 override.tfvars
+override.auto.tfvars
 *_override.tf
 *_override.tf.json
 *_override.tfvars
+*_override.auto.tfvars
 
 # Sensitive variable values
 sensitive.tfvars
