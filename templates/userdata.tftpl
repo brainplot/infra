@@ -19,11 +19,22 @@ EOF
 cat >/etc/ssh/sshd_config.d/99-custom.conf <<EOF
 %{~if ssh_port != 22}
 Port ${ssh_port}
-%{endif}
+%{~endif}
 AuthorizedKeysFile .ssh/authorized_keys
 PasswordAuthentication no
 PermitRootLogin no
 X11Forwarding no
 EOF
-
 systemctl reload ssh
+
+%{~if ssh_port != 22}
+# Specify custom SSH port for the droplet-agent service
+mkdir -p /etc/systemd/system/droplet-agent.service.d
+cat >/etc/systemd/system/droplet-agent.service.d/override.conf <<EOF
+[Service]
+ExecStart=
+ExecStart=/opt/digitalocean/bin/droplet-agent -syslog -sshd_port ${ssh_port}
+EOF
+systemctl daemon-reload
+systemctl restart droplet-agent
+%{~endif}
