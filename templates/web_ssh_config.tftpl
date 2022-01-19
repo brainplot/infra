@@ -2,4 +2,4 @@ Host ${host}
 HostName ${hostname}
 IdentityFile ${identity_file}
 User ${user}
-Port ${port}
+%{if port != 22 }Port ${port}%{endif}
