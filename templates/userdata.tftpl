@@ -16,7 +16,7 @@ ${admin_user} ALL=(ALL) NOPASSWD:ALL
 EOF
 
 # Custom settings for the sshd service
-cat >/etc/ssh/sshd_config.d/custom.conf <<EOF
+cat >/etc/ssh/sshd_config.d/99-custom.conf <<EOF
 Port ${ssh_port}
 AuthorizedKeysFile .ssh/authorized_keys
 PasswordAuthentication no
