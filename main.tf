@@ -32,7 +32,7 @@ locals {
 }
 
 resource "digitalocean_ssh_key" "web" {
-  name       = var.domain_name
+  name       = "https.${var.domain_name}"
   public_key = file(pathexpand(local.ssh_public_key_file))
 }
 
@@ -73,7 +73,7 @@ locals {
 }
 
 resource "digitalocean_firewall" "web" {
-  name        = var.domain_name
+  name        = "https.${var.domain_name}"
   droplet_ids = [digitalocean_droplet.web.id]
 
   inbound_rule {
