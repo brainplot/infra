@@ -33,7 +33,7 @@ locals {
 
 resource "digitalocean_ssh_key" "web" {
   name       = var.domain_name
-  public_key = file(local.ssh_public_key_file)
+  public_key = file(pathexpand(local.ssh_public_key_file))
 }
 
 resource "digitalocean_droplet" "web" {
