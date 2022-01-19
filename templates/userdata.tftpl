@@ -17,7 +17,9 @@ EOF
 
 # Custom settings for the sshd service
 cat >/etc/ssh/sshd_config.d/99-custom.conf <<EOF
+%{~if ssh_port != 22}
 Port ${ssh_port}
+%{endif}
 AuthorizedKeysFile .ssh/authorized_keys
 PasswordAuthentication no
 PermitRootLogin no
