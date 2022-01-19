@@ -33,3 +33,6 @@ terraform.rc
 
 # Environment
 .env
+
+# Output folder
+/output/
