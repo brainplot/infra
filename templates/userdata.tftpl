@@ -1,6 +1,9 @@
 #!/bin/sh
 
-adduser -q --gecos Administrator --disabled-password ${admin_user} && adduser ${admin_user} sudo
+set -eu
+
+adduser -q --gecos Administrator --disabled-password ${admin_user}
+adduser ${admin_user} sudo
 
 # Authorize key for the admin user
 mkdir -p -m0700 ~${admin_user}/.ssh
