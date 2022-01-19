@@ -1,11 +1,13 @@
 #!/bin/sh
 
-apt-get -y update && apt-get -y upgrade
+alias apt-get='apt-get -qy'
 
-apt-get -y install sudo
+apt-get update && apt-get upgrade
 
-apt-get -y autoremove
-apt-get -y clean
+apt-get install sudo
+
+apt-get autoremove
+apt-get clean
 
 adduser -q --gecos Administrator --disabled-password ${admin_user} && adduser ${admin_user} sudo
 
