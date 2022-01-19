@@ -23,9 +23,14 @@ resource "digitalocean_vpc" "website" {
   ip_range = var.vpc_ip_range
 }
 
+locals {
+  ssh_private_key_file = "~/.ssh/${var.domain_name}"
+  ssh_public_key_file  = "${local.ssh_private_key_file}.pub"
+}
+
 resource "digitalocean_ssh_key" "web" {
   name       = var.domain_name
-  public_key = file("~/.ssh/${var.domain_name}.pub")
+  public_key = file(local.ssh_public_key_file)
 }
 
 resource "digitalocean_droplet" "web" {
