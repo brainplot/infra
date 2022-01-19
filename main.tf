@@ -4,9 +4,6 @@ terraform {
       source  = "digitalocean/digitalocean"
       version = "~> 2.0"
     }
-    local = {
-      version = "~> 2.0"
-    }
   }
 }
 
@@ -52,19 +49,6 @@ resource "digitalocean_droplet" "web" {
 
   vpc_uuid = digitalocean_vpc.website.id
   ssh_keys = [digitalocean_ssh_key.web.fingerprint]
-}
-
-resource "local_file" "web_ssh_config" {
-  filename             = pathexpand("~/.ssh/${var.domain_name}.config")
-  directory_permission = "0700"
-  file_permission      = "0600"
-  content = templatefile("templates/web_ssh_config.tftpl", {
-    host          = var.domain_name
-    hostname      = digitalocean_droplet.web.ipv4_address
-    identity_file = local.ssh_private_key_file
-    user          = var.admin_user
-    port          = var.ssh_port
-  })
 }
 
 locals {
