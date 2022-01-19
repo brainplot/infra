@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    digitalocean = {
-      source  = "digitalocean/digitalocean"
-      version = "~> 2.0"
-    }
-  }
-}
-
 resource "digitalocean_project" "website" {
   name        = var.domain_name
   description = var.project_description
