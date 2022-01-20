@@ -9,4 +9,10 @@ terraform {
       version = "~> 3.0"
     }
   }
+  cloud {
+    organization = "gianlucarecchia-dot-dev"
+    workspaces {
+      name = "infra"
+    }
+  }
 }
