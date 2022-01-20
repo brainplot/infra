@@ -26,17 +26,17 @@ variable "vpc_ip_range" {
   description = "The range of private addresses as defined in RFC1918."
 }
 
-variable "droplet_name" {
+variable "web_droplet_name" {
   type    = string
   default = null
 }
 
-variable "droplet_image" {
+variable "web_droplet_image" {
   type        = string
   description = "The Droplet image ID or slug (run `doctl compute image list --public` to list them)."
 }
 
-variable "droplet_size" {
+variable "web_droplet_size" {
   type        = string
   description = "The unique slug that indentifies the type of Droplet (run `doctl compute size list` to list them)."
 }

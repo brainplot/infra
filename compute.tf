@@ -38,10 +38,10 @@ resource "digitalocean_tag" "web_tags" {
 }
 
 resource "digitalocean_droplet" "web" {
-  image             = var.droplet_image
-  name              = var.droplet_name != null ? var.droplet_name : var.domain_name
+  image             = var.web_droplet_image
+  name              = var.web_droplet_name != null ? var.web_droplet_name : var.domain_name
   region            = var.region
-  size              = var.droplet_size
+  size              = var.web_droplet_size
   ipv6              = true
   graceful_shutdown = true
   droplet_agent     = true
