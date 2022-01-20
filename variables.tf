@@ -38,7 +38,7 @@ variable "droplet_image" {
 
 variable "droplet_size" {
   type        = string
-  description = "The unique slug that indentifies the type of Droplet. You can find a list of available slugs on https://docs.digitalocean.com/reference/api/api-reference/#tag/Sizes."
+  description = "The unique slug that indentifies the type of Droplet (run `doctl compute size list` to list them)."
 }
 
 variable "ssh_public_key_file" {
