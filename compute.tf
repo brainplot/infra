@@ -1,3 +1,12 @@
+variable "digitalocean_token" {
+  type      = string
+  sensitive = true
+}
+
+provider "digitalocean" {
+  token = var.digitalocean_token
+}
+
 resource "digitalocean_project" "website" {
   name        = var.domain_name
   description = var.project_description
