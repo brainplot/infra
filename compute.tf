@@ -8,7 +8,7 @@ provider "digitalocean" {
 }
 
 resource "digitalocean_project" "website" {
-  name        = var.domain_name
+  name        = var.project_name
   description = var.project_description
   purpose     = var.project_purpose
   environment = var.project_environment
