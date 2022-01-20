@@ -41,6 +41,10 @@ variable "droplet_size" {
   description = "The unique slug that indentifies the type of Droplet. You can find a list of available slugs on https://docs.digitalocean.com/reference/api/api-reference/#tag/Sizes."
 }
 
+variable "ssh_public_key_file" {
+  type = string
+}
+
 variable "ssh_port" {
   type    = number
   default = 22
