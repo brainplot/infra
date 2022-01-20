@@ -28,6 +28,15 @@ resource "digitalocean_ssh_key" "web" {
   public_key = file(var.ssh_public_key_file)
 }
 
+locals {
+  web_tags = distinct(var.web_tags)
+}
+
+resource "digitalocean_tag" "web_tags" {
+  count = length(local.web_tags)
+  name  = local.web_tags[count.index]
+}
+
 resource "digitalocean_droplet" "web" {
   image             = var.droplet_image
   name              = var.droplet_name != null ? var.droplet_name : var.domain_name
@@ -44,6 +53,7 @@ resource "digitalocean_droplet" "web" {
 
   vpc_uuid = digitalocean_vpc.website.id
   ssh_keys = [digitalocean_ssh_key.web.fingerprint]
+  tags     = digitalocean_tag.web_tags.*.id
 }
 
 locals {
@@ -52,8 +62,8 @@ locals {
 }
 
 resource "digitalocean_firewall" "web" {
-  name        = "https.${var.domain_name}"
-  droplet_ids = [digitalocean_droplet.web.id]
+  name = "https.${var.domain_name}"
+  tags = digitalocean_tag.web_tags.*.id
 
   inbound_rule {
     protocol         = "tcp"

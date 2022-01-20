@@ -64,3 +64,8 @@ variable "admin_user" {
     error_message = "UNIX users must match the ^[a-z][-a-z0-9]*$ pattern."
   }
 }
+
+variable "web_tags" {
+  type    = list(string)
+  default = []
+}
