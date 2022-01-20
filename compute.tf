@@ -25,7 +25,7 @@ resource "digitalocean_vpc" "website" {
 
 resource "digitalocean_ssh_key" "web" {
   name       = "https.${var.domain_name}"
-  public_key = file(var.ssh_public_key_file)
+  public_key = var.ssh_public_key
 }
 
 locals {

@@ -41,7 +41,7 @@ variable "web_droplet_size" {
   description = "The unique slug that indentifies the type of Droplet (run `doctl compute size list` to list them)."
 }
 
-variable "ssh_public_key_file" {
+variable "ssh_public_key" {
   type = string
 }
 
