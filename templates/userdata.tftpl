@@ -11,6 +11,7 @@ fstab_line="proc $mount_point proc $mount_opts,hidepid=2 0 0"
 echo "$fstab_line" >> /etc/fstab
 mount -o remount,hidepid=2 "$mount_point"
 
+# Add Administrator user, with sudo access
 adduser -q --gecos Administrator --disabled-password ${admin_user}
 adduser -q ${admin_user} sudo
 
