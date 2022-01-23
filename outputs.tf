@@ -1,3 +1,7 @@
+output "ssh_port" {
+  value = var.ssh_port
+}
+
 output "web_ipv4_address" {
   value = digitalocean_droplet.web.ipv4_address
 }
