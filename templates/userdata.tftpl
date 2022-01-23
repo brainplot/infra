@@ -2,6 +2,15 @@
 
 set -eu
 
+# Prevent users from seeing other users' processes
+read -r mount_point mount_opts <<EOF
+$(mount -t proc | perl -n -e '/proc\s+on\s+(\S+)\s+type\s+proc\s+\(([^)]*)\)/ && print "$1\t$2"')
+EOF
+sed -i -E '/^[[:space:]]*proc[[:space:]]/d' /etc/fstab
+fstab_line="proc $mount_point proc $mount_opts,hidepid=2 0 0"
+echo "$fstab_line" >> /etc/fstab
+mount -o remount,hidepid=2 "$mount_point"
+
 adduser -q --gecos Administrator --disabled-password ${admin_user}
 adduser -q ${admin_user} sudo
 
