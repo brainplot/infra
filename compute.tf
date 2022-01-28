@@ -2,6 +2,11 @@ provider "digitalocean" {
   token = var.digitalocean_token
 }
 
+locals {
+  web_ipv4_address = digitalocean_droplet.web.ipv4_address
+  web_ipv6_address = digitalocean_droplet.web.ipv6_address
+}
+
 resource "digitalocean_project" "website" {
   name        = var.project_name
   description = var.project_description

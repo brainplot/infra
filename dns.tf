@@ -9,14 +9,14 @@ resource "cloudflare_zone" "zone" {
 resource "cloudflare_record" "root_ipv4" {
   zone_id = cloudflare_zone.zone.id
   name    = var.domain_name
-  value   = digitalocean_droplet.web.ipv4_address
+  value   = local.web_ipv4_address
   type    = "A"
 }
 
 resource "cloudflare_record" "root_ipv6" {
   zone_id = cloudflare_zone.zone.id
   name    = var.domain_name
-  value   = digitalocean_droplet.web.ipv6_address
+  value   = local.web_ipv6_address
   type    = "AAAA"
 }
 
@@ -44,8 +44,8 @@ resource "cloudflare_api_token" "certbot" {
   condition {
     request_ip {
       in = [
-        "${digitalocean_droplet.web.ipv4_address}/32",
-        "${digitalocean_droplet.web.ipv6_address}/128",
+        "${local.web_ipv4_address}/32",
+        "${local.web_ipv6_address}/128",
       ]
     }
   }
