@@ -1,8 +1,3 @@
-variable "digitalocean_token" {
-  type      = string
-  sensitive = true
-}
-
 provider "digitalocean" {
   token = var.digitalocean_token
 }

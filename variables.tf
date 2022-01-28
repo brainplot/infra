@@ -73,3 +73,13 @@ variable "web_tags" {
   type    = list(string)
   default = []
 }
+
+variable "digitalocean_token" {
+  type      = string
+  sensitive = true
+}
+
+variable "cloudflare_api_token" {
+  type      = string
+  sensitive = true
+}
