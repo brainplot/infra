@@ -73,6 +73,12 @@ resource "digitalocean_firewall" "web" {
 
   inbound_rule {
     protocol         = "tcp"
+    port_range       = var.http_port
+    source_addresses = local.all_addresses
+  }
+
+  inbound_rule {
+    protocol         = "tcp"
     port_range       = var.https_port
     source_addresses = local.all_addresses
   }
