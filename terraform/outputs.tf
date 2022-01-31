@@ -1,3 +1,7 @@
+output "admin_user" {
+  value = var.admin_user
+}
+
 output "ssh_port" {
   value = var.ssh_port
 }
