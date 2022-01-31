@@ -14,6 +14,10 @@ output "web_ipv6_address" {
   value = local.web_ipv6_address
 }
 
+output "domain_name" {
+  value = var.domain_name
+}
+
 output "certbot_cloudflare_api_token" {
   value     = cloudflare_api_token.certbot.value
   sensitive = true
