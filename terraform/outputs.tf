@@ -14,17 +14,3 @@ output "certbot_cloudflare_api_token" {
   value     = cloudflare_api_token.certbot.value
   sensitive = true
 }
-
-output "ansible_inventory" {
-  sensitive = true
-  value = templatefile("${path.module}/templates/ansible_inventory.yaml.tftpl", {
-    # Vars
-    ansible_port                 = var.ssh_port,
-    ansible_ssh_user             = var.admin_user,
-    certbot_cloudflare_api_token = cloudflare_api_token.certbot.value,
-    # Groups
-    webservers = [
-      local.web_ipv4_address,
-    ],
-  })
-}
