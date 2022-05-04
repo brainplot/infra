@@ -1,5 +1,5 @@
 # Local .terraform directories
-**/.terraform/*
+.terraform/
 
 # .tfstate files
 *.tfstate
@@ -30,9 +30,3 @@ sensitive.auto.tfvars
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
-
-# Environment
-.env
-
-# Output folder
-/output/
