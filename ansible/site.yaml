@@ -1,0 +1,167 @@
+- name: Common
+  hosts: all
+  vars:
+    env:
+      EDITOR: vim
+  tasks:
+    - name: Full upgrade
+      become: yes
+      ansible.builtin.apt: update_cache=yes upgrade=yes autoclean=yes autoremove=yes state=latest
+      notify: Reboot if required
+
+    - name: Check for required reboot
+      ansible.builtin.meta: flush_handlers
+
+    - name: Create secrets directory
+      become: yes
+      ansible.builtin.file:
+        path: '{{ secrets_folder }}'
+        state: directory
+        mode: 0700
+
+    - name: Configure Vim globally
+      become: yes
+      ansible.builtin.copy:
+        src: vimrc.vim
+        dest: /etc/vim/vimrc.local
+
+    - name: Add environment variables for interactive shells
+      ansible.builtin.blockinfile:
+        path: .bashrc
+        marker: '# {mark} ENVIRONMENT'
+        block: |
+          {% for k in env %}
+          export {{ k }}={{ env[k] }}
+          {% endfor %}
+
+  handlers:
+    - name: Check if /var/run/reboot-required exists
+      become: yes
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+      register: reboot_required_file
+      listen: Reboot if required
+
+    - name: Reboot if /var/run/reboot-required exists
+      become: yes
+      when: reboot_required_file.stat.exists
+      ansible.builtin.reboot: {}
+      listen: Reboot if required
+
+- name: Webservers
+  hosts: webservers
+  vars:
+    domains:
+      - '{{ domain_name }}'
+      - 'www.{{ domain_name }}'
+  tasks:
+    - name: Install Certbot
+      become: yes
+      ansible.builtin.apt: name=certbot,python3-certbot-dns-cloudflare
+
+    - name: Configure Certbot
+      become: yes
+      ansible.builtin.blockinfile:
+        path: /etc/letsencrypt/cli.ini
+        block: "{{ lookup('template', 'certbot_config.ini.j2') }}"
+
+    - name: Inject Cloudflare API token for Certbot
+      become: yes
+      ansible.builtin.template:
+        src: certbot_cloudflare_credentials.ini.j2
+        dest: '{{ secrets_folder }}/{{ certbot_cloudflare_credentials_file }}'
+        mode: 0600
+
+    - name: Generate TLS certificates
+      become: yes
+      ansible.builtin.command:
+        creates: /etc/letsencrypt/live/{{ domain_name }}
+        cmd: 'certbot certonly --post-hook true --domains {{ domains | join(",") }}'
+
+    - name: Install Nginx
+      become: yes
+      ansible.builtin.apt: name=nginx-core
+
+    - name: Install DH params
+      become: yes
+      ansible.builtin.copy: src=nginx/ffdhe4096.txt dest=/etc/nginx
+      notify: Reload Nginx service
+
+    - name: Install nginx.conf
+      become: yes
+      ansible.builtin.copy: src=nginx/nginx.conf dest=/etc/nginx
+      notify: Reload Nginx service
+
+    - name: Install common Nginx snippets
+      become: yes
+      ansible.builtin.copy: 'src=nginx/snippets/{{ item }} dest=/etc/nginx/snippets/'
+      loop:
+        - gzip.conf
+        - listen-ssl.conf
+      notify: Reload Nginx service
+
+    - name: Create directory for SSL nginx snippets
+      become: yes
+      ansible.builtin.file: path=/etc/nginx/snippets/ssl state=directory
+
+    - name: Install SSL Nginx snippets
+      become: yes
+      ansible.builtin.template:
+        src: nginx/snippets/ssl/domain.conf.j2
+        dest: /etc/nginx/snippets/ssl/{{ domain_name }}.conf
+      notify: Reload Nginx service
+
+    - name: Symlink www SSL Nginx snippets
+      become: yes
+      ansible.builtin.file:
+        src: /etc/nginx/snippets/ssl/{{ domain_name }}.conf
+        dest: /etc/nginx/snippets/ssl/www.{{ domain_name }}.conf
+        state: link
+      notify: Reload Nginx service
+
+    - name: Install upgrade server configuration in sites-available
+      become: yes
+      ansible.builtin.copy: src=nginx/sites-available/upgrade dest=/etc/nginx/sites-available/
+
+    - name: Link upgrade server to default in sites-enabled
+      become: yes
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/upgrade
+        dest: /etc/nginx/sites-enabled/default
+        state: link
+      notify: Reload Nginx service
+
+    - name: Copy naked domain configuration in sites-available
+      become: yes
+      ansible.builtin.template:
+        src: nginx/sites-available/domain.conf.j2
+        dest: /etc/nginx/sites-available/{{ domain_name }}
+      notify: Reload Nginx service
+
+    - name: Copy www domain configuration in sites-available
+      become: yes
+      ansible.builtin.template:
+        src: nginx/sites-available/www.domain.conf.j2
+        dest: /etc/nginx/sites-available/www.{{ domain_name }}
+
+    - name: Link sites in sites-enabled
+      become: yes
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/{{ item }}
+        dest: /etc/nginx/sites-enabled/{{ item }}
+        state: link
+      with_items: '{{ domains }}'
+      notify: Reload Nginx service
+
+    - name: Check Nginx configuration
+      become: yes
+      changed_when: false
+      ansible.builtin.command:
+        cmd: nginx -t
+
+  handlers:
+    - name: Restart Nginx service
+      become: yes
+      ansible.builtin.service:
+        name: nginx
+        state: restarted

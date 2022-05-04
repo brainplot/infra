@@ -1,0 +1,9 @@
+server {
+	include snippets/listen-ssl.conf;
+
+	server_name www.{{ domain_name }};
+
+	include snippets/ssl/www.{{ domain_name }}.conf;
+
+	return 308 $scheme://{{ domain_name }}$request_uri;
+}

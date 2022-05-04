@@ -1,0 +1,18 @@
+# Use ECC for the private key
+key-type = {{ certbot_key_type }}
+
+# Register with the specified e-mail address
+email = {{ certbot_email }}
+
+# Don't share email address with the EFF
+no-eff-email = true
+
+# Automatically agree to the terms of service of the ACME server
+agree-tos = true
+
+# Use the Cloudflare plugin for authentication
+dns-cloudflare = true
+dns-cloudflare-credentials = {{ secrets_folder }}/{{ certbot_cloudflare_credentials_file }}
+
+# Restart server upon certificate renewal
+post-hook = systemctl reload nginx

@@ -1,0 +1,17 @@
+server {
+	include snippets/listen-ssl.conf;
+
+	server_name {{ domain_name }};
+
+	# root /var/www/html;
+	# index index.html index.htm index.nginx-debian.html;
+
+	include snippets/ssl/{{ domain_name }}.conf;
+	include snippets/gzip.conf;
+
+	# location / {
+	# 	try_files $uri $uri/ =404;
+	# }
+
+	return 302 https://github.com/brainplot;
+}
