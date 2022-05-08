@@ -25,6 +25,15 @@
         src: vimrc.vim
         dest: /etc/vim/vimrc.local
 
+    - name: Install tmux
+      become: yes
+      ansible.builtin.apt: name=tmux
+
+    - name: Configure tmux
+      ansible.builtin.copy:
+        src: tmux.conf
+        dest: .tmux.conf
+
     - name: Add environment variables for interactive shells
       ansible.builtin.blockinfile:
         path: .bashrc
