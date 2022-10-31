@@ -169,7 +169,7 @@
         cmd: nginx -t
 
   handlers:
-    - name: Restart Nginx service
+    - name: Reload Nginx service
       become: yes
       ansible.builtin.service:
         name: nginx
